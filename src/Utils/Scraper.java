@@ -13,9 +13,11 @@ import java.util.HashMap;
 public class Scraper {
     BufferedReader reader;
     private static Document site;
-
-    public Scraper(InputStreamReader website) {
+    private static String username, password;
+    public Scraper(InputStreamReader website, String username, String password) {
         this.reader = new BufferedReader(website);
+        this.username = username;
+        this.password = password;
     }
 
     /*
@@ -40,31 +42,28 @@ public class Scraper {
     a new page, from the page it is currently on.
      */
 
-    public String getNextPage() {
-        String newSite = "";
+    public String getNextPage(Document site) {
+        String newURL = "";
         try {
-            site = Jsoup.connect(reader.readLine()).timeout(0).get();
             Elements newPeople = site.getElementsByClass("name actor-name");
             for (Element name : newPeople) {
-                System.out.println(name.text());
+            System.out.println(name.text());
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return newSite;
+        return newURL;
     }
 
     /*
     This function performs the login which is required upon connecting to the website.
      */
 
-    public void executeLogin() throws IOException {
+    public Document executeLogin() throws IOException {
 
         final String user_agent = "Mozilla";
-        String loginFormURL = "https://www.linkedin.com/";
+        String loginFormURL = "https://www.linkedin.com";
         String loginActionURL = "https://www.linkedin.com/uas/login-submit";
-        String username = "Enter email"; // enter your own email
-        String password = "Enter password"; // enter your own password
 
         HashMap<String, String> cookies = new HashMap<>();
         HashMap<String, String> formData = new HashMap<>();
@@ -80,8 +79,8 @@ public class Scraper {
                 .attr("value");
 
 
-        formData.put("session_key", username);
-        formData.put("session_password", password);
+        formData.put("session_key", this.username);
+        formData.put("session_password", this.password);
         formData.put("IsJsEnabled", "false");
         formData.put("loginCsrfParam", login_csrf_param);
 
@@ -91,7 +90,7 @@ public class Scraper {
                 .method(Connection.Method.POST)
                 .userAgent(user_agent)
                 .execute();
-
+        return homePage.parse();
     }
 
 }
