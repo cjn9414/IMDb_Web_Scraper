@@ -11,9 +11,9 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 
 public class Scraper {
-    BufferedReader reader;
-    private static Document site;
-    private static String username, password;
+    private BufferedReader reader;
+    private Document site;
+    private String username, password;
     public Scraper(InputStreamReader website, String username, String password) {
         this.reader = new BufferedReader(website);
         this.username = username;
@@ -25,12 +25,15 @@ public class Scraper {
     of any given feature we feel will be advantageous to analyze.
      */
 
+//    TODO Scrape where people went to school and where they live now.
+//    TODO Find correlation between degree and location
+
     public void scrapeData() {
         try {
 
             Elements tags = site.select("tr");
-            for (int index = 0; index < tags.size(); index++) {
-                System.out.println(tags.get(index).text());
+            for (Element e : tags) {
+                System.out.println(e.text());
             }
         } catch (Exception e) {
             e.printStackTrace();
