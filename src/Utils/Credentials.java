@@ -16,9 +16,9 @@ public class Credentials {
         String[] parts;
         while ((line = credReader.readLine()) != null) {
             parts = line.split("=");
-            if (parts[0] == "USERNAME") {
+            if (parts[0].equals("USERNAME")) {
                 user = parts[1];
-            } else if (parts[0] == "PASSWORD") {
+            } else if (parts[0].equals("PASSWORD")) {
                 pass = parts[1];
             }
         }
