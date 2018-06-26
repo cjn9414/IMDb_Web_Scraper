@@ -24,15 +24,15 @@ public class Scraper {
      */
 
 
-    public void scrapeData() {
+    public String getTitle() {
+        String title;
         try {
-            Elements tags = this.site.select("tr");
-            for (Element e : tags) {
-                System.out.println(e.text());
-            }
+            title = site.getElementById("firstHeading").text();
+            return title;
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return site.getElementsByAttribute("a").first().text();
     }
 
     /*
