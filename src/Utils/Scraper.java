@@ -42,9 +42,18 @@ public class Scraper {
 
     public HashMap<String, String> collectReferences() {
         HashMap<String, String> relatedArticles = new HashMap<String, String>();
+        String[] blackList = {"Special", "Wikipedia", ".php",
+                "Portal", "Help", "shop", "https"};
         try {
             Elements articles = site.getElementsByAttribute("title");
             for (Element article : articles) {
+                String link = article.attr("href");
+                int count;
+                for (count = 0; count < blackList.length; count++) {
+                    String ignoredWord = blackList[count];
+                    if (link.contains(ignoredWord)) break;
+                }
+                if (count != blackList.length) continue;
                 relatedArticles.put(article.text(), article.attr("href"));
             }
         } catch (Exception e) {

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 public class Article extends JPanel {
     public String name, link;
     public int x, y;
+    public boolean isClicked = false, isHover = false;
     public Ellipse2D body;
     public Article(String name_temp, String link_temp, int x_temp, int y_temp) {
         this.name = name_temp;
