@@ -4,11 +4,17 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
+import java.util.Random;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Scraper {
     private Document site;
     private String username, password, website;
+    public ArrayList<Article> articles;
+    public Random rand = new Random();
     public Scraper(String website) {
         this.website = website;
         try {
@@ -60,5 +66,28 @@ public class Scraper {
             e.printStackTrace();
         }
         return relatedArticles;
+    }
+
+    public String configureScraper() {
+        HashMap<String, String> pageReferences = this.collectReferences();
+        String title = this.getTitle();
+        ArrayList<Article> articles = new ArrayList<>();
+        for (Map.Entry<String, String> pair : pageReferences.entrySet()) { //Every link
+            Article new_article = new Article(pair.getKey(), pair.getValue(), rand.nextInt(1280), rand.nextInt(800));
+            articles.add(new_article);
+        }
+        this.articles = articles;
+        return title;
+    }
+    public ArrayList<Article> getArticles() {
+        return this.articles;
+    }
+    public void getNewConnection(String new_website) {
+        this.website = new_website;
+        try {
+            this.site = Jsoup.connect(website).execute().parse();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

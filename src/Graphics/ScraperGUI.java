@@ -12,11 +12,11 @@ public class ScraperGUI {
     JFrame window;
     ArrayList<Article> articles;
     String title;
-    public ScraperGUI(ArrayList<Article> articles_temp, String title_temp) {
+    public ScraperGUI(ArrayList<Article> articles_temp, String title_temp, Scraper scraper_temp) {
         this.articles = articles_temp;
         this.title = title_temp;
         window = new JFrame();
-        window.add(new MainPanel(articles, 10, this));
+        window.add(new MainPanel(articles, scraper_temp, 10, this));
         window.setSize(1280, 800);
         window.setTitle(title);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -27,9 +27,9 @@ public class ScraperGUI {
 class MainPanel extends JPanel {
     ArrayList<Article> articles;
     ReferenceBox refBox;
-    public MainPanel(ArrayList<Article> articles_temp, int radius, ScraperGUI display) {
+    public MainPanel(ArrayList<Article> articles_temp, Scraper scraper_temp, int radius, ScraperGUI display) {
         this.articles = articles_temp;
-        refBox = new ReferenceBox(this, articles.get(0));
+        refBox = new ReferenceBox(this, articles.get(0), scraper_temp);
         refBox.setVisible(false);
         this.add(refBox);
         for (Article article : articles) {
@@ -107,12 +107,14 @@ class ReferenceBox extends JPanel {
     public MainPanel mainPanel;
     private JLabel articleName;
     private String address;
+    private Scraper scraper;
 
-    public ReferenceBox(MainPanel mainPanel_temp, Article article_temp) {
+    public ReferenceBox(MainPanel mainPanel_temp, Article article_temp, Scraper scraper_temp) {
         this.article = article_temp;
         this.address = "https://en.wikipedia.org" + article.link;
         this.articleName = new JLabel(article.name);
         this.mainPanel = mainPanel_temp;
+        this.scraper = scraper_temp;
         this.setLayout(new GridLayout(5,5, 10, 10));
         closeButton.addActionListener(new ActionListener() {
             @Override
@@ -130,7 +132,8 @@ class ReferenceBox extends JPanel {
         jumpToArticle.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // scrape new page
+                scraper.getNewConnection(address);
+                System.out.println(scraper.getTitle());
             }
         });
         this.add(closeButton).setLocation(1, 1);
