@@ -46,7 +46,7 @@ public class Scraper {
     new pages, based on the page it is currently on.
      */
 
-    public HashMap<String, String> collectReferences() {
+    private HashMap<String, String> collectReferences() {
         HashMap<String, String> relatedArticles = new HashMap<String, String>();
         String[] blackList = {"Special", "Wikipedia", ".php",
                 "Portal", "Help", "shop", "https"};
