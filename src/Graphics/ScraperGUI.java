@@ -22,13 +22,20 @@ public class ScraperGUI {
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setVisible(true);
     }
+    public void refresh() {
+        window.setTitle(title);
+    }
 }
 
 class MainPanel extends JPanel {
     ArrayList<Article> articles;
     ReferenceBox refBox;
-    public MainPanel(ArrayList<Article> articles_temp, Scraper scraper_temp, int radius, ScraperGUI display) {
+    ScraperGUI display;
+    int radius;
+    public MainPanel(ArrayList<Article> articles_temp, Scraper scraper_temp, int radius_temp, ScraperGUI display_temp) {
         this.articles = articles_temp;
+        this.display = display_temp;
+        this.radius = radius_temp;
         refBox = new ReferenceBox(this, articles.get(0), scraper_temp);
         refBox.setVisible(false);
         this.add(refBox);
@@ -96,6 +103,17 @@ class MainPanel extends JPanel {
     public void closeArticleWindow() {
         refBox.setVisible(false);
     }
+    public void updateDisplay(ArrayList<Article> new_articles, String new_title) {
+        refBox.setVisible(false);
+        this.articles = new_articles;
+        display.articles = new_articles;
+        display.title = new_title;
+        for (Article article : articles) {
+            Ellipse2D.Double ellipse = new Ellipse2D.Double(article.x, article.y, radius*2, radius*2);
+            article.body = ellipse;
+        }
+        display.refresh();
+    }
 
 }
 
@@ -133,7 +151,8 @@ class ReferenceBox extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 scraper.getNewConnection(address);
-                System.out.println(scraper.getTitle());
+                String title = scraper.configureScraper();
+                mainPanel.updateDisplay(scraper.articles, title);
             }
         });
         this.add(closeButton).setLocation(1, 1);
